@@ -45,8 +45,9 @@ echo "🌐 Generating Traefik Configuration..."
 cat << EOF > ~/gitops/traefik.env
 TRAEFIK_DOMAIN=erp.seinnyaungso.com
 EMAIL=admin@seinnyaungso.com
-# Default password is 'admin' (you can regenerate this via htpasswd later)
-HASHED_PASSWORD=\$apr1\$K.4gp7RT\$tj9R2jHh0D4Gb5o5fIAzm/
+# Default password is 'admin'
+# NOTE: Dollar signs are doubled ($$) for docker-compose interpolation
+HASHED_PASSWORD=\$\$apr1\$\$K.4gp7RT\$\$tj9R2jHh0D4Gb5o5fIAzm/
 EOF
 
 # 5. Generate MariaDB configuration
@@ -81,7 +82,7 @@ docker compose --project-name traefik \
 docker compose --project-name erpnext \
   --env-file ~/gitops/erpnext.env \
   -f compose.yaml \
-  -f overrides/compose.maridb-shared.yaml \
+  -f overrides/compose.mariadb-shared.yaml \
   -f overrides/compose.redis.yaml \
   -f overrides/compose.multi-bench.yaml \
   -f overrides/compose.multi-bench-ssl.yaml config > ~/gitops/erpnext.yaml
